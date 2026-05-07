@@ -9,8 +9,50 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TariffsRouteImport } from './routes/tariffs'
+import { Route as SupportRouteImport } from './routes/support'
+import { Route as ServicesRouteImport } from './routes/services'
+import { Route as PaymentRouteImport } from './routes/payment'
+import { Route as OfferRouteImport } from './routes/offer'
+import { Route as InstructionsRouteImport } from './routes/instructions'
+import { Route as ContactsRouteImport } from './routes/contacts'
 import { Route as IndexRouteImport } from './routes/index'
 
+const TariffsRoute = TariffsRouteImport.update({
+  id: '/tariffs',
+  path: '/tariffs',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SupportRoute = SupportRouteImport.update({
+  id: '/support',
+  path: '/support',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ServicesRoute = ServicesRouteImport.update({
+  id: '/services',
+  path: '/services',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PaymentRoute = PaymentRouteImport.update({
+  id: '/payment',
+  path: '/payment',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OfferRoute = OfferRouteImport.update({
+  id: '/offer',
+  path: '/offer',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InstructionsRoute = InstructionsRouteImport.update({
+  id: '/instructions',
+  path: '/instructions',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ContactsRoute = ContactsRouteImport.update({
+  id: '/contacts',
+  path: '/contacts',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -19,28 +61,130 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/contacts': typeof ContactsRoute
+  '/instructions': typeof InstructionsRoute
+  '/offer': typeof OfferRoute
+  '/payment': typeof PaymentRoute
+  '/services': typeof ServicesRoute
+  '/support': typeof SupportRoute
+  '/tariffs': typeof TariffsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/contacts': typeof ContactsRoute
+  '/instructions': typeof InstructionsRoute
+  '/offer': typeof OfferRoute
+  '/payment': typeof PaymentRoute
+  '/services': typeof ServicesRoute
+  '/support': typeof SupportRoute
+  '/tariffs': typeof TariffsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/contacts': typeof ContactsRoute
+  '/instructions': typeof InstructionsRoute
+  '/offer': typeof OfferRoute
+  '/payment': typeof PaymentRoute
+  '/services': typeof ServicesRoute
+  '/support': typeof SupportRoute
+  '/tariffs': typeof TariffsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/contacts'
+    | '/instructions'
+    | '/offer'
+    | '/payment'
+    | '/services'
+    | '/support'
+    | '/tariffs'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/contacts'
+    | '/instructions'
+    | '/offer'
+    | '/payment'
+    | '/services'
+    | '/support'
+    | '/tariffs'
+  id:
+    | '__root__'
+    | '/'
+    | '/contacts'
+    | '/instructions'
+    | '/offer'
+    | '/payment'
+    | '/services'
+    | '/support'
+    | '/tariffs'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ContactsRoute: typeof ContactsRoute
+  InstructionsRoute: typeof InstructionsRoute
+  OfferRoute: typeof OfferRoute
+  PaymentRoute: typeof PaymentRoute
+  ServicesRoute: typeof ServicesRoute
+  SupportRoute: typeof SupportRoute
+  TariffsRoute: typeof TariffsRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/tariffs': {
+      id: '/tariffs'
+      path: '/tariffs'
+      fullPath: '/tariffs'
+      preLoaderRoute: typeof TariffsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/support': {
+      id: '/support'
+      path: '/support'
+      fullPath: '/support'
+      preLoaderRoute: typeof SupportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/services': {
+      id: '/services'
+      path: '/services'
+      fullPath: '/services'
+      preLoaderRoute: typeof ServicesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/payment': {
+      id: '/payment'
+      path: '/payment'
+      fullPath: '/payment'
+      preLoaderRoute: typeof PaymentRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/offer': {
+      id: '/offer'
+      path: '/offer'
+      fullPath: '/offer'
+      preLoaderRoute: typeof OfferRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/instructions': {
+      id: '/instructions'
+      path: '/instructions'
+      fullPath: '/instructions'
+      preLoaderRoute: typeof InstructionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/contacts': {
+      id: '/contacts'
+      path: '/contacts'
+      fullPath: '/contacts'
+      preLoaderRoute: typeof ContactsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -53,7 +197,24 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ContactsRoute: ContactsRoute,
+  InstructionsRoute: InstructionsRoute,
+  OfferRoute: OfferRoute,
+  PaymentRoute: PaymentRoute,
+  ServicesRoute: ServicesRoute,
+  SupportRoute: SupportRoute,
+  TariffsRoute: TariffsRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
