@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { Phone, Mail, Clock, MapPin } from "lucide-react";
+import { Phone, Mail, Clock, MapPin, Facebook, MessageCircle } from "lucide-react";
 import logo from "@/assets/logo.png";
 
 export function SiteFooter() {
@@ -13,8 +13,18 @@ export function SiteFooter() {
               <span className="font-display text-lg font-bold">ЗУРБАГАН</span>
             </Link>
             <p className="mt-4 text-sm text-muted-foreground">
-              Оператор кабельного ТБ та інтернет-провайдер у Конотопі. З вами з 2002 року.
+              Оператор кабельного ТБ та інтернет-провайдер у Конотопі. Понад 30 років на ринку.
             </p>
+            <div className="mt-4 flex gap-2">
+              <a href="https://www.facebook.com/profile.php?id=100041707791128" target="_blank" rel="noreferrer"
+                className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border bg-background hover:border-brand hover:text-brand" aria-label="Facebook">
+                <Facebook className="h-4 w-4" />
+              </a>
+              <a href="viber://chat?number=%2B380673002200" target="_blank" rel="noreferrer"
+                className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border bg-background hover:border-brand hover:text-brand" aria-label="Viber">
+                <MessageCircle className="h-4 w-4" />
+              </a>
+            </div>
           </div>
 
           <div>

@@ -1,7 +1,8 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { Menu, X, Phone } from "lucide-react";
+import { Menu, X, Phone, Shield } from "lucide-react";
 import logo from "@/assets/logo.png";
+import { useAuth } from "@/hooks/use-auth";
 
 const nav = [
   { to: "/", label: "Головна" },
@@ -15,6 +16,7 @@ const nav = [
 
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
+  const { isAdmin } = useAuth();
   return (
     <header className="sticky top-0 z-50 border-b border-border/60 bg-background/80 backdrop-blur-xl">
       <div className="mx-auto flex h-18 max-w-7xl items-center justify-between gap-6 px-4 py-3 lg:px-8">
@@ -53,6 +55,13 @@ export function SiteHeader() {
           >
             Особистий кабінет
           </a>
+          <Link
+            to={isAdmin ? "/admin" : "/login"}
+            title={isAdmin ? "Адмін-панель" : "Вхід для адміна"}
+            className="rounded-full border border-border bg-background p-2.5 text-foreground/70 transition-colors hover:border-brand hover:text-brand"
+          >
+            <Shield className="h-4 w-4" />
+          </Link>
         </div>
 
         <button

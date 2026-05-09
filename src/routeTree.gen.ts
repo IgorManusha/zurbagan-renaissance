@@ -14,8 +14,10 @@ import { Route as SupportRouteImport } from './routes/support'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as PaymentRouteImport } from './routes/payment'
 import { Route as OfferRouteImport } from './routes/offer'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as InstructionsRouteImport } from './routes/instructions'
 import { Route as ContactsRouteImport } from './routes/contacts'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as IndexRouteImport } from './routes/index'
 
 const TariffsRoute = TariffsRouteImport.update({
@@ -43,6 +45,11 @@ const OfferRoute = OfferRouteImport.update({
   path: '/offer',
   getParentRoute: () => rootRouteImport,
 } as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const InstructionsRoute = InstructionsRouteImport.update({
   id: '/instructions',
   path: '/instructions',
@@ -53,6 +60,11 @@ const ContactsRoute = ContactsRouteImport.update({
   path: '/contacts',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -61,8 +73,10 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
   '/contacts': typeof ContactsRoute
   '/instructions': typeof InstructionsRoute
+  '/login': typeof LoginRoute
   '/offer': typeof OfferRoute
   '/payment': typeof PaymentRoute
   '/services': typeof ServicesRoute
@@ -71,8 +85,10 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
   '/contacts': typeof ContactsRoute
   '/instructions': typeof InstructionsRoute
+  '/login': typeof LoginRoute
   '/offer': typeof OfferRoute
   '/payment': typeof PaymentRoute
   '/services': typeof ServicesRoute
@@ -82,8 +98,10 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
   '/contacts': typeof ContactsRoute
   '/instructions': typeof InstructionsRoute
+  '/login': typeof LoginRoute
   '/offer': typeof OfferRoute
   '/payment': typeof PaymentRoute
   '/services': typeof ServicesRoute
@@ -94,8 +112,10 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/admin'
     | '/contacts'
     | '/instructions'
+    | '/login'
     | '/offer'
     | '/payment'
     | '/services'
@@ -104,8 +124,10 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/admin'
     | '/contacts'
     | '/instructions'
+    | '/login'
     | '/offer'
     | '/payment'
     | '/services'
@@ -114,8 +136,10 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/admin'
     | '/contacts'
     | '/instructions'
+    | '/login'
     | '/offer'
     | '/payment'
     | '/services'
@@ -125,8 +149,10 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRoute
   ContactsRoute: typeof ContactsRoute
   InstructionsRoute: typeof InstructionsRoute
+  LoginRoute: typeof LoginRoute
   OfferRoute: typeof OfferRoute
   PaymentRoute: typeof PaymentRoute
   ServicesRoute: typeof ServicesRoute
@@ -171,6 +197,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OfferRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/instructions': {
       id: '/instructions'
       path: '/instructions'
@@ -185,6 +218,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ContactsRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -197,8 +237,10 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRoute,
   ContactsRoute: ContactsRoute,
   InstructionsRoute: InstructionsRoute,
+  LoginRoute: LoginRoute,
   OfferRoute: OfferRoute,
   PaymentRoute: PaymentRoute,
   ServicesRoute: ServicesRoute,
@@ -208,13 +250,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
