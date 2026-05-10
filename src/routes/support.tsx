@@ -1,12 +1,16 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Section, PageHeader } from "@/components/page-shell";
 import { MessageCircle, Phone, Send, ExternalLink } from "lucide-react";
+import { useSetting } from "@/hooks/use-settings";
+import { SpeedTest } from "@/components/speed-test";
 
 export const Route = createFileRoute("/support")({
-  head: () => ({ meta: [
-    { title: "Підтримка — Зурбаган" },
-    { name: "description", content: "Цілодобова підтримка абонентів: телефон, Telegram-бот, Viber та особистий кабінет." },
-  ]}),
+  head: () => ({
+    meta: [
+      { title: "Підтримка — Зурбаган" },
+      { name: "description", content: "Цілодобова підтримка абонентів: телефон, Viber та особистий кабінет. Перевірка швидкості з'єднання." },
+    ],
+  }),
   component: Support,
 });
 
@@ -21,36 +25,47 @@ const features = [
 ];
 
 function Support() {
+  const telegramEnabled = useSetting("telegram", false);
+
   return (
     <>
-      <PageHeader eyebrow="Підтримка" title="Ми поряд, коли потрібно" description="Декілька зручних каналів зв'язку — оберіть той, що підходить вам." />
-      <Section>
+      <PageHeader
+        eyebrow="Підтримка"
+        title="Ми поряд, коли потрібно"
+        description="Кілька зручних каналів зв'язку — оберіть той, що підходить вам."
+      />
+      <Section className="space-y-10">
         <div className="grid gap-8 lg:grid-cols-[1.2fr_1fr]">
-          <div className="rounded-3xl border border-border bg-card p-8 shadow-soft">
-            <div className="inline-flex items-center gap-2 rounded-full bg-brand/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-brand">
-              <Send className="h-3.5 w-3.5" /> Telegram-бот
-            </div>
-            <h2 className="mt-4 text-2xl font-bold">@zurbagan_super_bot</h2>
-            <p className="mt-3 text-muted-foreground">Запущено для зручності наших абонентів. У боті ви зможете легко:</p>
-            <ul className="mt-5 grid gap-2.5 sm:grid-cols-2">
-              {features.map((f) => (
-                <li key={f} className="flex items-start gap-2 text-sm">
-                  <span className="mt-1.5 inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-brand" />
-                  {f}
-                </li>
-              ))}
-            </ul>
-            <p className="mt-5 text-sm text-muted-foreground">
-              Для підключення введіть у Telegram <strong>@zurbagan_super_bot</strong> та підтвердіть свій номер телефону, що вказаний у вашому обліковому записі користувача Інтернет.
-            </p>
-            <a
-              href="https://t.me/zurbagan_super_bot"
-              target="_blank"
-              rel="noreferrer"
-              className="mt-6 inline-flex items-center gap-2 rounded-full bg-gradient-brand px-6 py-3 font-semibold text-brand-foreground shadow-soft transition-transform hover:scale-[1.02]"
-            >
-              Відкрити бот <ExternalLink className="h-4 w-4" />
-            </a>
+          <div className="space-y-6">
+            {telegramEnabled && (
+              <div className="rounded-3xl border border-border bg-card p-8 shadow-soft">
+                <div className="inline-flex items-center gap-2 rounded-full bg-brand/10 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-brand">
+                  <Send className="h-3.5 w-3.5" /> Telegram-бот
+                </div>
+                <h2 className="mt-4 text-2xl font-bold">@zurbagan_super_bot</h2>
+                <p className="mt-3 text-muted-foreground">
+                  Запущено для зручності наших абонентів. У боті ви зможете легко:
+                </p>
+                <ul className="mt-5 grid gap-2.5 sm:grid-cols-2">
+                  {features.map((f) => (
+                    <li key={f} className="flex items-start gap-2 text-sm">
+                      <span className="mt-1.5 inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-brand" />
+                      {f}
+                    </li>
+                  ))}
+                </ul>
+                <a
+                  href="https://t.me/zurbagan_super_bot"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-6 inline-flex items-center gap-2 rounded-full bg-gradient-brand px-6 py-3 font-semibold text-brand-foreground shadow-soft transition-transform hover:scale-[1.02]"
+                >
+                  Відкрити бот <ExternalLink className="h-4 w-4" />
+                </a>
+              </div>
+            )}
+
+            <SpeedTest />
           </div>
 
           <div className="space-y-4">
