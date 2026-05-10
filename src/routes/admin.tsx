@@ -10,7 +10,7 @@ export const Route = createFileRoute("/admin")({
   component: Admin,
 });
 
-type Tab = "applications" | "news" | "settings";
+type Tab = "applications" | "news" | "content" | "settings";
 
 function Admin() {
   const { user, isAdmin, loading } = useAuth();
@@ -35,10 +35,10 @@ function Admin() {
       <PageHeader eyebrow="Адмінпанель" title="Керування сайтом" description={`Ви: ${user.email}`} />
       <Section>
         <div className="mb-6 flex flex-wrap gap-2">
-          {(["applications", "news", "settings"] as Tab[]).map(t => (
+          {(["applications", "news", "content", "settings"] as Tab[]).map(t => (
             <button key={t} onClick={() => setTab(t)}
               className={`rounded-full px-5 py-2 text-sm font-semibold transition-colors ${tab === t ? "bg-gradient-brand text-brand-foreground" : "bg-secondary text-foreground hover:bg-secondary/70"}`}>
-              {t === "applications" ? "Заявки" : t === "news" ? "Новини" : "Налаштування"}
+              {t === "applications" ? "Заявки" : t === "news" ? "Новини" : t === "content" ? "Контент" : "Налаштування"}
             </button>
           ))}
           <button onClick={() => supabase.auth.signOut().then(() => nav({ to: "/" }))}
@@ -47,6 +47,7 @@ function Admin() {
         </div>
         {tab === "applications" && <Applications />}
         {tab === "news" && <News />}
+        {tab === "content" && <Content />}
         {tab === "settings" && <Settings />}
       </Section>
     </>
