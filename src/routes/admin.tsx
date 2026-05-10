@@ -184,3 +184,113 @@ function Settings() {
     </div>
   );
 }
+
+const SCHEMA: Record<string, { label: string; fields: { key: string; label: string; type?: "text" | "textarea" | "list" }[] }> = {
+  brand: {
+    label: "Бренд",
+    fields: [
+      { key: "name", label: "Назва бренду" },
+      { key: "tagline", label: "Підпис під логотипом" },
+      { key: "description", label: "Опис у футері", type: "textarea" },
+      { key: "footer_tagline", label: "Слоган у футері" },
+      { key: "years", label: "Років на ринку (напр. 30+)" },
+    ],
+  },
+  contacts: {
+    label: "Контакти",
+    fields: [
+      { key: "phones", label: "Телефони (по одному на рядок)", type: "list" },
+      { key: "primary_phone", label: "Основний телефон (у шапці)" },
+      { key: "email", label: "Email" },
+      { key: "address", label: "Адреса" },
+      { key: "schedule", label: "Графік роботи" },
+      { key: "schedule_note", label: "Примітка до графіку" },
+    ],
+  },
+  requisites: {
+    label: "Реквізити",
+    fields: [
+      { key: "recipient", label: "Отримувач" },
+      { key: "iban", label: "IBAN / р/р" },
+      { key: "bank", label: "Банк" },
+      { key: "notice", label: "Текст попередження на сторінці Оплата", type: "textarea" },
+    ],
+  },
+  links: {
+    label: "Посилання",
+    fields: [
+      { key: "cabinet", label: "Особистий кабінет (URL)" },
+      { key: "facebook", label: "Facebook (URL)" },
+      { key: "viber", label: "Viber (URL, viber://…)" },
+      { key: "telegram", label: "Telegram (URL)" },
+      { key: "speedtest", label: "Speedtest (URL)" },
+    ],
+  },
+};
+
+function Content() {
+  const [rows, setRows] = useState<Record<string, any>>({});
+  const [saving, setSaving] = useState<string | null>(null);
+
+  const load = async () => {
+    const { data } = await supabase.from("site_content").select("key,value");
+    const m: Record<string, any> = {};
+    (data || []).forEach((r: any) => { m[r.key] = r.value; });
+    setRows(m);
+  };
+  useEffect(() => { load(); }, []);
+
+  async function save(key: string, value: any) {
+    setSaving(key);
+    const { error } = await supabase.from("site_content").upsert({ key, value });
+    setSaving(null);
+    if (error) toast.error(error.message);
+    else { toast.success("Збережено"); load(); }
+  }
+
+  return (
+    <div className="space-y-8">
+      {Object.entries(SCHEMA).map(([sectionKey, section]) => {
+        const value = rows[sectionKey] || {};
+        return (
+          <form key={sectionKey} onSubmit={(e) => {
+            e.preventDefault();
+            const fd = new FormData(e.currentTarget);
+            const next: any = { ...value };
+            section.fields.forEach(f => {
+              const raw = String(fd.get(f.key) ?? "");
+              next[f.key] = f.type === "list" ? raw.split("\n").map(s => s.trim()).filter(Boolean) : raw;
+            });
+            save(sectionKey, next);
+          }} className="rounded-2xl border border-border bg-card p-6 shadow-soft">
+            <div className="mb-4 flex items-center justify-between">
+              <h3 className="font-display text-lg font-bold">{section.label}</h3>
+              <button disabled={saving === sectionKey} className="rounded-full bg-gradient-brand px-5 py-2 text-sm font-semibold text-brand-foreground disabled:opacity-50">
+                {saving === sectionKey ? "Збереження…" : "Зберегти"}
+              </button>
+            </div>
+            <div className="grid gap-4 md:grid-cols-2">
+              {section.fields.map(f => {
+                const v = value[f.key];
+                const def = f.type === "list" ? (Array.isArray(v) ? v.join("\n") : "") : (v ?? "");
+                return (
+                  <label key={f.key} className={`block text-sm ${f.type === "textarea" || f.type === "list" ? "md:col-span-2" : ""}`}>
+                    <span className="mb-1 block text-xs font-medium text-muted-foreground">{f.label}</span>
+                    {f.type === "textarea" || f.type === "list" ? (
+                      <textarea name={f.key} defaultValue={def} rows={f.type === "list" ? 4 : 3}
+                        className="w-full rounded-xl border border-border bg-background px-3 py-2" />
+                    ) : (
+                      <input name={f.key} defaultValue={def}
+                        className="w-full rounded-xl border border-border bg-background px-3 py-2" />
+                    )}
+                  </label>
+                );
+              })}
+            </div>
+          </form>
+        );
+      })}
+    </div>
+  );
+}
+
