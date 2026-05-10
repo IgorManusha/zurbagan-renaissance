@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Section, PageHeader } from "@/components/page-shell";
 import { CreditCard, Smartphone, Ticket, Building, AlertCircle } from "lucide-react";
+import { useContent } from "@/hooks/use-content";
 
 export const Route = createFileRoute("/payment")({
   head: () => ({ meta: [
@@ -10,14 +11,14 @@ export const Route = createFileRoute("/payment")({
   component: Payment,
 });
 
-const methods = [
-  { icon: CreditCard, title: "Банківська картка", desc: "Оплата карткою будь-якого банку через сервіс Приват24." },
-  { icon: Smartphone, title: "Telegram-бот", desc: "Поповнюйте рахунок прямо в Telegram через @zurbagan_super_bot." },
-  { icon: Ticket, title: "Скретч-картка", desc: "Активуйте картку поповнення в особистому кабінеті або боті." },
-  { icon: Building, title: "Банківський переказ", desc: "На розрахунковий рахунок UA393052990000026005045201817 (АТ КБ «ПРИВАТБАНК»)." },
-];
-
 function Payment() {
+  const { requisites } = useContent();
+  const methods = [
+    { icon: CreditCard, title: "Банківська картка", desc: "Оплата карткою будь-якого банку через сервіс Приват24." },
+    { icon: Smartphone, title: "Telegram-бот", desc: "Поповнюйте рахунок прямо в Telegram через @zurbagan_super_bot." },
+    { icon: Ticket, title: "Скретч-картка", desc: "Активуйте картку поповнення в особистому кабінеті або боті." },
+    { icon: Building, title: "Банківський переказ", desc: `Отримувач: ${requisites.recipient}. На розрахунковий рахунок ${requisites.iban} (${requisites.bank}).` },
+  ];
   return (
     <>
       <PageHeader eyebrow="Оплата" title="Зручні способи поповнити рахунок" description="Оберіть найзручніший варіант — оплата зараховується миттєво." />
@@ -26,7 +27,7 @@ function Payment() {
           <div className="flex items-start gap-3">
             <AlertCircle className="h-5 w-5 shrink-0 text-accent-foreground" />
             <div>
-              <strong>Увага!</strong> Шановні абоненти, які поповнюють рахунок не з Приват24: оплата здійснюється на новий розрахунковий рахунок <strong>UA393052990000026005045201817</strong>, відкритий в АТ КБ «ПРИВАТБАНК».
+              <strong>Увага!</strong> {requisites.notice}
             </div>
           </div>
         </div>
