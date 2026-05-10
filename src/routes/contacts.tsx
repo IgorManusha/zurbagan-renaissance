@@ -2,6 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Section, PageHeader } from "@/components/page-shell";
 import { Phone, Mail, MapPin, Clock } from "lucide-react";
 import { ApplicationForm } from "@/components/application-form";
+import { useContent } from "@/hooks/use-content";
 
 export const Route = createFileRoute("/contacts")({
   head: () => ({
@@ -14,6 +15,7 @@ export const Route = createFileRoute("/contacts")({
 });
 
 function Contacts() {
+  const { contacts } = useContent();
   return (
     <>
       <PageHeader
@@ -29,9 +31,9 @@ function Contacts() {
                 <div className="rounded-xl bg-gradient-brand p-3 text-brand-foreground"><Phone className="h-5 w-5" /></div>
                 <div>
                   <div className="text-xs uppercase tracking-wider text-muted-foreground">Телефони</div>
-                  <a href="tel:+380673002200" className="block font-display text-lg font-bold hover:text-brand">067 300 22 00</a>
-                  <a href="tel:+380663002200" className="block font-display text-lg font-bold hover:text-brand">066 300 22 00</a>
-                  <a href="tel:+380732002200" className="block font-display text-lg font-bold hover:text-brand">073 200 22 00</a>
+                  {contacts.phones.map((p) => (
+                    <a key={p} href={`tel:+${p.replace(/\D/g, "")}`} className="block font-display text-lg font-bold hover:text-brand">{p}</a>
+                  ))}
                 </div>
               </div>
             </div>
@@ -41,7 +43,7 @@ function Contacts() {
                 <div className="rounded-xl bg-gradient-brand p-3 text-brand-foreground"><Mail className="h-5 w-5" /></div>
                 <div>
                   <div className="text-xs uppercase tracking-wider text-muted-foreground">Email</div>
-                  <a href="mailto:info@zurbagan.tv" className="font-display text-lg font-bold hover:text-brand">info@zurbagan.tv</a>
+                  <a href={`mailto:${contacts.email}`} className="font-display text-lg font-bold hover:text-brand">{contacts.email}</a>
                 </div>
               </div>
             </div>
@@ -51,7 +53,7 @@ function Contacts() {
                 <div className="rounded-xl bg-gradient-brand p-3 text-brand-foreground"><MapPin className="h-5 w-5" /></div>
                 <div>
                   <div className="text-xs uppercase tracking-wider text-muted-foreground">Адреса</div>
-                  <div className="font-display text-lg font-bold">м. Конотоп, Сумська обл.</div>
+                  <div className="font-display text-lg font-bold">{contacts.address}</div>
                 </div>
               </div>
             </div>
@@ -61,8 +63,8 @@ function Contacts() {
                 <div className="rounded-xl bg-gradient-brand p-3 text-brand-foreground"><Clock className="h-5 w-5" /></div>
                 <div>
                   <div className="text-xs uppercase tracking-wider text-muted-foreground">Графік роботи</div>
-                  <div className="font-semibold">Пн–Пт: 9:00–18:00</div>
-                  <div className="text-sm text-muted-foreground">Перерва 13:00–14:00 · Сб–Нд: вихідні</div>
+                  <div className="font-semibold">{contacts.schedule}</div>
+                  <div className="text-sm text-muted-foreground">{contacts.schedule_note}</div>
                 </div>
               </div>
             </div>
