@@ -41,7 +41,7 @@ function NewsDetail() {
       <PageHeader eyebrow={item.date} title={item.title} description={item.excerpt} />
       <Section>
         <article className="prose prose-neutral max-w-3xl">
-          {item.body.map((p, i) => (
+          {item.body.map((p: string, i: number) => (
             <p key={i} className="mt-4 text-base leading-relaxed text-foreground/90">
               {p}
             </p>
