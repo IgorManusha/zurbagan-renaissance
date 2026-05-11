@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Wifi, Tv, Zap, Shield, Headphones, Award, ArrowRight, CheckCircle2, Gauge, Users } from "lucide-react";
+import { NEWS } from "@/lib/news-data";
 
 export const Route = createFileRoute("/")({
   component: Home,
@@ -20,11 +21,7 @@ const tariffs = [
   { name: "FiberNET 500", speed: "500 / 500", price: 500, tag: "Максимум" },
 ];
 
-const news = [
-  { date: "15.03.2026", title: "Актуалізація тарифних планів — квітень 2026", excerpt: "З 1 квітня 2026 р. оновлюється абонентська плата за тарифними планами Ethernet та GPON для фізичних осіб." },
-  { date: "07.07.2025", title: "Зміна реквізитів для оплати", excerpt: "Оплата для абонентів, які не використовують Приват24, здійснюється на новий розрахунковий рахунок." },
-  { date: "02.06.2025", title: "Інструкція з додавання E-mail у кабінеті", excerpt: "Додавайте e-mail та номер у особистому кабінеті, щоб отримувати сповіщення про стан балансу." },
-];
+const news = NEWS;
 
 function Home() {
   return (
@@ -183,14 +180,14 @@ function Home() {
         </div>
         <div className="mt-10 grid gap-6 md:grid-cols-3">
           {news.map((n) => (
-            <article key={n.title} className="group rounded-2xl border border-border bg-card p-6 shadow-soft transition-all hover:-translate-y-1 hover:shadow-card">
+            <Link key={n.slug} to="/news/$slug" params={{ slug: n.slug }} className="group block rounded-2xl border border-border bg-card p-6 shadow-soft transition-all hover:-translate-y-1 hover:shadow-card">
               <time className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{n.date}</time>
               <h3 className="mt-3 text-lg font-semibold leading-snug group-hover:text-brand">{n.title}</h3>
               <p className="mt-2 text-sm text-muted-foreground">{n.excerpt}</p>
               <div className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-brand">
-                Деталі <ArrowRight className="h-3.5 w-3.5" />
+                Деталі <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
               </div>
-            </article>
+            </Link>
           ))}
         </div>
       </section>
