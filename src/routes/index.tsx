@@ -180,14 +180,14 @@ function Home() {
         </div>
         <div className="mt-10 grid gap-6 md:grid-cols-3">
           {news.map((n) => (
-            <article key={n.title} className="group rounded-2xl border border-border bg-card p-6 shadow-soft transition-all hover:-translate-y-1 hover:shadow-card">
+            <Link key={n.slug} to="/news/$slug" params={{ slug: n.slug }} className="group block rounded-2xl border border-border bg-card p-6 shadow-soft transition-all hover:-translate-y-1 hover:shadow-card">
               <time className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{n.date}</time>
               <h3 className="mt-3 text-lg font-semibold leading-snug group-hover:text-brand">{n.title}</h3>
               <p className="mt-2 text-sm text-muted-foreground">{n.excerpt}</p>
               <div className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-brand">
-                Деталі <ArrowRight className="h-3.5 w-3.5" />
+                Деталі <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
               </div>
-            </article>
+            </Link>
           ))}
         </div>
       </section>
