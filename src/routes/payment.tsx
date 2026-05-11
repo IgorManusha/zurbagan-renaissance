@@ -17,7 +17,7 @@ function Payment() {
     { icon: CreditCard, title: "Банківська картка", desc: "Оплата карткою будь-якого банку через сервіс Приват24." },
     { icon: Smartphone, title: "Telegram-бот", desc: "Поповнюйте рахунок прямо в Telegram через @zurbagan_super_bot." },
     { icon: Ticket, title: "Скретч-картка", desc: "Активуйте картку поповнення в особистому кабінеті або боті." },
-    { icon: Building, title: "Банківський переказ", desc: `Отримувач: ${requisites.recipient}. На розрахунковий рахунок ${requisites.iban} (${requisites.bank}).` },
+    { icon: Building, title: "Банківський переказ", desc: "Реквізити для переказу — нижче на сторінці." },
   ];
   return (
     <>
