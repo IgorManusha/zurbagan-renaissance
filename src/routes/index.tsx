@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Wifi, Tv, Zap, Shield, Headphones, Award, ArrowRight, CheckCircle2, Gauge, Users } from "lucide-react";
+import { NEWS } from "@/lib/news-data";
 
 export const Route = createFileRoute("/")({
   component: Home,
