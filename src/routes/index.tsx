@@ -25,6 +25,8 @@ const tariffs = [
 const news = NEWS;
 
 function Home() {
+  const showNews = useSetting("news_block", true);
+  const showConnection = useSetting("connection_block", true);
   return (
     <>
       {/* HERO */}
@@ -51,7 +53,7 @@ function Home() {
                 Обрати тариф
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Link>
-              <Link to="/contacts" className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-6 py-3.5 font-semibold backdrop-blur transition-colors hover:bg-white/10">
+              <Link to="/connection" className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/5 px-6 py-3.5 font-semibold backdrop-blur transition-colors hover:bg-white/10">
                 Підключитися
               </Link>
             </div>
@@ -171,27 +173,62 @@ function Home() {
         </div>
       </section>
 
-      {/* NEWS */}
-      <section className="mx-auto max-w-7xl px-4 py-20 lg:px-8">
-        <div className="flex items-end justify-between gap-4">
-          <div>
-            <div className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">Новини</div>
-            <h2 className="mt-2 text-3xl font-bold md:text-4xl">Останні оголошення</h2>
+      {/* CONNECTION STEPS */}
+      {showConnection && (
+        <section className="bg-surface py-20">
+          <div className="mx-auto max-w-7xl px-4 lg:px-8">
+            <div className="max-w-2xl">
+              <div className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">Підключення</div>
+              <h2 className="mt-2 text-3xl font-bold md:text-4xl">Як стати абонентом — 4 кроки</h2>
+              <p className="mt-3 text-muted-foreground">Залишаєте заявку → стаєте у чергу → ми телефонуємо за день до візиту → бригада підключає.</p>
+            </div>
+            <div className="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+              {[
+                { icon: ClipboardList, t: "Заявка", d: "Заповнюєте форму, прикріплюєте фото паспорта і коду." },
+                { icon: CalendarCheck, t: "Черга", d: "Заявка реєструється у системі та потрапляє в чергу підключення." },
+                { icon: Phone, t: "Дзвінок", d: "За день до візиту менеджер телефонує і узгоджує час." },
+                { icon: Wrench, t: "Інсталяція", d: "Бригада приїжджає, прокладає кабель і налаштовує обладнання." },
+              ].map((s, i) => (
+                <div key={s.t} className="relative rounded-3xl border border-border bg-card p-6 shadow-soft">
+                  <div className="absolute -top-3 -left-3 flex h-9 w-9 items-center justify-center rounded-full bg-gradient-brand font-display text-sm font-bold text-brand-foreground shadow-soft">{i + 1}</div>
+                  <div className="mb-3 inline-flex rounded-xl bg-secondary p-3 text-brand"><s.icon className="h-5 w-5" /></div>
+                  <h3 className="text-lg font-bold">{s.t}</h3>
+                  <p className="mt-2 text-sm text-muted-foreground">{s.d}</p>
+                </div>
+              ))}
+            </div>
+            <div className="mt-8 text-center">
+              <Link to="/connection" className="inline-flex items-center gap-2 rounded-full bg-gradient-brand px-7 py-3.5 text-sm font-semibold text-brand-foreground shadow-soft transition-transform hover:scale-[1.02]">
+                Залишити заявку <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
           </div>
-        </div>
-        <div className="mt-10 grid gap-6 md:grid-cols-3">
-          {news.map((n) => (
-            <Link key={n.slug} to="/news/$slug" params={{ slug: n.slug }} className="group block rounded-2xl border border-border bg-card p-6 shadow-soft transition-all hover:-translate-y-1 hover:shadow-card">
-              <time className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{n.date}</time>
-              <h3 className="mt-3 text-lg font-semibold leading-snug group-hover:text-brand">{n.title}</h3>
-              <p className="mt-2 text-sm text-muted-foreground">{n.excerpt}</p>
-              <div className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-brand">
-                Деталі <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
-              </div>
-            </Link>
-          ))}
-        </div>
-      </section>
+        </section>
+      )}
+
+      {/* NEWS */}
+      {showNews && (
+        <section className="mx-auto max-w-7xl px-4 py-20 lg:px-8">
+          <div className="flex items-end justify-between gap-4">
+            <div>
+              <div className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">Новини</div>
+              <h2 className="mt-2 text-3xl font-bold md:text-4xl">Останні оголошення</h2>
+            </div>
+          </div>
+          <div className="mt-10 grid gap-6 md:grid-cols-3">
+            {news.map((n) => (
+              <Link key={n.slug} to="/news/$slug" params={{ slug: n.slug }} className="group block rounded-2xl border border-border bg-card p-6 shadow-soft transition-all hover:-translate-y-1 hover:shadow-card">
+                <time className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">{n.date}</time>
+                <h3 className="mt-3 text-lg font-semibold leading-snug group-hover:text-brand">{n.title}</h3>
+                <p className="mt-2 text-sm text-muted-foreground">{n.excerpt}</p>
+                <div className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-brand">
+                  Деталі <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
+                </div>
+              </Link>
+            ))}
+          </div>
+        </section>
+      )}
 
       {/* CTA */}
       <section className="mx-auto max-w-7xl px-4 pb-20 lg:px-8">
