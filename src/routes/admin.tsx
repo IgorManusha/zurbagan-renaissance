@@ -66,23 +66,43 @@ function Applications() {
     <div className="overflow-x-auto rounded-2xl border border-border bg-card">
       <table className="w-full text-sm">
         <thead className="bg-secondary text-left"><tr>
-          <th className="p-3">Дата</th><th className="p-3">Ім'я</th><th className="p-3">Телефон</th>
-          <th className="p-3">Адреса</th><th className="p-3">Тариф</th><th className="p-3">Статус</th><th></th>
+          <th className="p-3">Дата</th><th className="p-3">ПІБ</th><th className="p-3">Телефон</th>
+          <th className="p-3">Адреса</th><th className="p-3">Тариф</th><th className="p-3">Документи</th><th className="p-3">Статус</th><th></th>
         </tr></thead>
         <tbody>
           {rows.map(r => (
-            <tr key={r.id} className="border-t border-border">
+            <tr key={r.id} className="border-t border-border align-top">
               <td className="p-3 whitespace-nowrap">{new Date(r.created_at).toLocaleString("uk")}</td>
-              <td className="p-3">{r.name}</td>
+              <td className="p-3">{[r.last_name, r.name].filter(Boolean).join(" ") || r.name}</td>
               <td className="p-3"><a href={`tel:${r.phone}`} className="text-brand">{r.phone}</a></td>
-              <td className="p-3">{r.address || "—"}</td>
+              <td className="p-3 max-w-[260px]">{r.address || "—"}</td>
               <td className="p-3">{r.tariff || "—"}</td>
+              <td className="p-3">
+                {Array.isArray(r.documents) && r.documents.length > 0 ? (
+                  <div className="space-y-1">
+                    {r.documents.map((d: any, i: number) => (
+                      <button key={i} onClick={async () => {
+                        const { data } = await supabase.storage.from("application-docs").createSignedUrl(d.path, 300);
+                        if (data?.signedUrl) window.open(data.signedUrl, "_blank");
+                      }} className="block text-xs text-brand hover:underline">
+                        {d.kind === "passport" ? "Паспорт" : "ІПН"}: {d.name || d.path.split("/").pop()}
+                      </button>
+                    ))}
+                  </div>
+                ) : <span className="text-xs text-muted-foreground">—</span>}
+              </td>
               <td className="p-3">
                 <select value={r.status} onChange={async (e) => {
                   await supabase.from("applications").update({ status: e.target.value }).eq("id", r.id); load();
                 }} className="rounded border border-border bg-background px-2 py-1">
-                  <option value="new">Нова</option><option value="in_progress">В роботі</option>
-                  <option value="done">Підключено</option><option value="rejected">Відмова</option>
+                  <option value="new">Нова</option>
+                  <option value="queue">На черзі</option>
+                  <option value="in_progress">В роботі</option>
+                  <option value="done">Виконано</option>
+                  <option value="postponed">Перенесено</option>
+                  <option value="no_option">Нема можливості</option>
+                  <option value="rejected">Відмова</option>
+                  <option value="kk">Какашка</option>
                 </select>
               </td>
               <td className="p-3"><button onClick={async () => {
@@ -91,7 +111,7 @@ function Applications() {
               }} className="text-destructive">×</button></td>
             </tr>
           ))}
-          {rows.length === 0 && <tr><td colSpan={7} className="p-6 text-center text-muted-foreground">Заявок немає</td></tr>}
+          {rows.length === 0 && <tr><td colSpan={8} className="p-6 text-center text-muted-foreground">Заявок немає</td></tr>}
         </tbody>
       </table>
     </div>
