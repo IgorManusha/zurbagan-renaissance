@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Wifi, Tv, Zap, Shield, Headphones, Award, ArrowRight, CheckCircle2, Gauge, Users } from "lucide-react";
+import { Wifi, Tv, Zap, Shield, Headphones, Award, ArrowRight, CheckCircle2, Gauge, Users, ClipboardList, Phone, CalendarCheck, Wrench } from "lucide-react";
 import { NEWS } from "@/lib/news-data";
+import { useSetting } from "@/hooks/use-settings";
 
 export const Route = createFileRoute("/")({
   component: Home,
