@@ -17,32 +17,56 @@ export type Database = {
       applications: {
         Row: {
           address: string | null
+          apartment: string | null
+          city: string | null
           created_at: string
+          district: string | null
+          documents: Json
+          house: string | null
           id: string
+          last_name: string | null
           message: string | null
           name: string
           phone: string
+          region: string | null
           status: string
+          street: string | null
           tariff: string | null
         }
         Insert: {
           address?: string | null
+          apartment?: string | null
+          city?: string | null
           created_at?: string
+          district?: string | null
+          documents?: Json
+          house?: string | null
           id?: string
+          last_name?: string | null
           message?: string | null
           name: string
           phone: string
+          region?: string | null
           status?: string
+          street?: string | null
           tariff?: string | null
         }
         Update: {
           address?: string | null
+          apartment?: string | null
+          city?: string | null
           created_at?: string
+          district?: string | null
+          documents?: Json
+          house?: string | null
           id?: string
+          last_name?: string | null
           message?: string | null
           name?: string
           phone?: string
+          region?: string | null
           status?: string
+          street?: string | null
           tariff?: string | null
         }
         Relationships: []
