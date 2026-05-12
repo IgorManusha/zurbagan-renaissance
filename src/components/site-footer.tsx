@@ -1,8 +1,9 @@
 import { Link } from "@tanstack/react-router";
-import { Phone, Mail, Clock, MapPin, Facebook, MessageCircle } from "lucide-react";
+import { Phone, Mail, Clock, MapPin } from "lucide-react";
 import logo from "@/assets/logo.png";
 import { useContent } from "@/hooks/use-content";
 import { useSetting } from "@/hooks/use-settings";
+import { SocialIcons } from "@/components/social-icons";
 
 export function SiteFooter() {
   const { brand, contacts, links } = useContent();
@@ -17,25 +18,8 @@ export function SiteFooter() {
               <span className="font-display text-lg font-bold">{brand.name}</span>
             </Link>
             <p className="mt-4 text-sm text-muted-foreground">{brand.description}</p>
-            <div className="mt-4 flex gap-2">
-              {links.facebook && (
-                <a href={links.facebook} target="_blank" rel="noreferrer"
-                  className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border bg-background hover:border-brand hover:text-brand" aria-label="Facebook">
-                  <Facebook className="h-4 w-4" />
-                </a>
-              )}
-              {links.viber && (
-                <a href={links.viber} target="_blank" rel="noreferrer"
-                  className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border bg-background hover:border-brand hover:text-brand" aria-label="Viber">
-                  <MessageCircle className="h-4 w-4" />
-                </a>
-              )}
-              {showTelegram && links.telegram && (
-                <a href={links.telegram} target="_blank" rel="noreferrer"
-                  className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-border bg-background hover:border-brand hover:text-brand" aria-label="Telegram">
-                  <MessageCircle className="h-4 w-4" />
-                </a>
-              )}
+            <div className="mt-5">
+              <SocialIcons facebook={links.facebook} viber={links.viber} telegram={links.telegram} showTelegram={showTelegram} />
             </div>
           </div>
 
