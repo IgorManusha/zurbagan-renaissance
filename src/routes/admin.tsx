@@ -188,6 +188,18 @@ function Settings() {
     services_block: "Блок «Послуги» на головній",
     tariffs_block: "Блок «Тарифи» на головній",
     speedtest_block: "Віджет Speedtest",
+    connection_block: "Блок «Підключення» на головній",
+    header_home: "Хедер: пункт «Головна»",
+    header_services: "Хедер: пункт «Послуги»",
+    header_tariffs: "Хедер: пункт «Тарифи»",
+    header_instructions: "Хедер: пункт «Інструкції»",
+    header_support: "Хедер: пункт «Підтримка»",
+    header_payment: "Хедер: пункт «Оплата»",
+    header_contacts: "Хедер: пункт «Контакти»",
+    header_phone: "Хедер: телефон",
+    header_cabinet_btn: "Хедер: кнопка «Особистий кабінет»",
+    header_admin_btn: "Хедер: кнопка адміна (щит)",
+    header_socials: "Хедер: іконки соцмереж",
   };
   return (
     <div className="space-y-2">
