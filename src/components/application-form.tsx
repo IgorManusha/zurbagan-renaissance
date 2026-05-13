@@ -90,7 +90,7 @@ export function ApplicationForm({ tariff, compact = false }: { tariff?: string; 
 
     setLoading(true);
     try {
-      const uploaded = await uploadDocs();
+      const uploaded = docs.length ? await uploadDocs() : [];
       const v = parsed.data;
       const address = [v.region, v.district, v.city, v.street && `вул. ${v.street}`, v.house && `буд. ${v.house}`, v.apartment && `кв. ${v.apartment}`].filter(Boolean).join(", ");
       const { error } = await supabase.from("applications").insert({
@@ -99,11 +99,11 @@ export function ApplicationForm({ tariff, compact = false }: { tariff?: string; 
         phone: v.phone,
         region: v.region || null,
         district: v.district || null,
-        city: v.city,
-        street: v.street,
-        house: v.house,
+        city: v.city || null,
+        street: v.street || null,
+        house: v.house || null,
         apartment: v.apartment || null,
-        address,
+        address: address || null,
         message: v.message || null,
         tariff: v.tariff || null,
         status: "new",
@@ -112,9 +112,10 @@ export function ApplicationForm({ tariff, compact = false }: { tariff?: string; 
       if (error) throw new Error(error.message);
       toast.success("Заявку прийнято! Ми зателефонуємо найближчим часом.");
       setDone(true);
-      (e.currentTarget as HTMLFormElement).reset();
+      formEl.reset();
       setDocs([]);
     } catch (err: any) {
+      console.error("[application-form] submit failed", err);
       toast.error("Не вдалось надіслати: " + err.message);
     } finally {
       setLoading(false);
