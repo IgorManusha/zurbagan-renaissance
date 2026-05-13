@@ -327,3 +327,52 @@ function Content() {
   );
 }
 
+function Account() {
+  const { user } = useAuth();
+  const [email, setEmail] = useState(user?.email || "");
+  const [password, setPassword] = useState("");
+  const [saving, setSaving] = useState(false);
+
+  async function saveEmail(e: React.FormEvent) {
+    e.preventDefault();
+    if (!email || !email.includes("@")) return toast.error("Некоректний email");
+    setSaving(true);
+    const { error } = await supabase.auth.updateUser({ email });
+    setSaving(false);
+    if (error) return toast.error(error.message);
+    toast.success("Запит на зміну email надіслано. Перевірте пошту для підтвердження.");
+  }
+
+  async function savePassword(e: React.FormEvent) {
+    e.preventDefault();
+    if (password.length < 6) return toast.error("Пароль мін. 6 символів");
+    setSaving(true);
+    const { error } = await supabase.auth.updateUser({ password });
+    setSaving(false);
+    if (error) return toast.error(error.message);
+    setPassword("");
+    toast.success("Пароль оновлено");
+  }
+
+  return (
+    <div className="grid gap-4 md:grid-cols-2">
+      <form onSubmit={saveEmail} className="space-y-3 rounded-2xl border border-border bg-card p-6">
+        <h3 className="font-display text-lg font-bold">Змінити email</h3>
+        <input type="email" value={email} onChange={e => setEmail(e.target.value)}
+          className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm" />
+        <button disabled={saving} className="rounded-full bg-gradient-brand px-5 py-2 text-sm font-semibold text-brand-foreground disabled:opacity-50">
+          Оновити email
+        </button>
+      </form>
+      <form onSubmit={savePassword} className="space-y-3 rounded-2xl border border-border bg-card p-6">
+        <h3 className="font-display text-lg font-bold">Змінити пароль</h3>
+        <input type="password" value={password} onChange={e => setPassword(e.target.value)} placeholder="Новий пароль (мін. 6)"
+          className="w-full rounded-xl border border-border bg-background px-3 py-2 text-sm" />
+        <button disabled={saving} className="rounded-full bg-gradient-brand px-5 py-2 text-sm font-semibold text-brand-foreground disabled:opacity-50">
+          Оновити пароль
+        </button>
+      </form>
+    </div>
+  );
+}
+
