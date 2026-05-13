@@ -7,8 +7,8 @@ export function useSetting(key: string, fallback = true) {
     let active = true;
     supabase.from("site_settings").select("enabled").eq("key", key).maybeSingle()
       .then(({ data }) => { if (active && data) setEnabled(data.enabled); });
-    const ch = supabase.channel(`setting-${key}`)
-      .on("postgres_changes", { event: "*", schema: "public", table: "site_settings", filter: `key=eq.${key}` },
+    const ch = supabase.channel(`setting-${key}-${Math.random().toString(36).slice(2)}`);
+    ch.on("postgres_changes" as any, { event: "*", schema: "public", table: "site_settings", filter: `key=eq.${key}` },
         (p: any) => setEnabled(!!p.new?.enabled))
       .subscribe();
     return () => { active = false; supabase.removeChannel(ch); };
