@@ -60,25 +60,37 @@ export function ApplicationForm({ tariff, compact = false }: { tariff?: string; 
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const fd = new FormData(e.currentTarget);
-    const parsed = schema.safeParse({
+    const formEl = e.currentTarget;
+    const fd = new FormData(formEl);
+    const activeSchema = compact
+      ? schema.extend({
+          city: z.string().trim().max(80).optional().or(z.literal("")),
+          street: z.string().trim().max(100).optional().or(z.literal("")),
+          house: z.string().trim().max(20).optional().or(z.literal("")),
+        })
+      : schema;
+    const parsed = activeSchema.safeParse({
       name: fd.get("name"),
       last_name: fd.get("last_name") || "",
       phone: fd.get("phone"),
       region: fd.get("region") || "",
       district: fd.get("district") || "",
-      city: fd.get("city"),
-      street: fd.get("street"),
-      house: fd.get("house"),
+      city: fd.get("city") || "",
+      street: fd.get("street") || "",
+      house: fd.get("house") || "",
       apartment: fd.get("apartment") || "",
       message: fd.get("message") || "",
       tariff: tariff || (fd.get("tariff") as string) || "",
     });
-    if (!parsed.success) { toast.error(parsed.error.issues[0].message); return; }
+    if (!parsed.success) {
+      console.error("[application-form] validation failed", parsed.error.issues);
+      toast.error(parsed.error.issues[0].message);
+      return;
+    }
 
     setLoading(true);
     try {
-      const uploaded = await uploadDocs();
+      const uploaded = docs.length ? await uploadDocs() : [];
       const v = parsed.data;
       const address = [v.region, v.district, v.city, v.street && `вул. ${v.street}`, v.house && `буд. ${v.house}`, v.apartment && `кв. ${v.apartment}`].filter(Boolean).join(", ");
       const { error } = await supabase.from("applications").insert({
@@ -87,11 +99,11 @@ export function ApplicationForm({ tariff, compact = false }: { tariff?: string; 
         phone: v.phone,
         region: v.region || null,
         district: v.district || null,
-        city: v.city,
-        street: v.street,
-        house: v.house,
+        city: v.city || null,
+        street: v.street || null,
+        house: v.house || null,
         apartment: v.apartment || null,
-        address,
+        address: address || null,
         message: v.message || null,
         tariff: v.tariff || null,
         status: "new",
@@ -100,9 +112,10 @@ export function ApplicationForm({ tariff, compact = false }: { tariff?: string; 
       if (error) throw new Error(error.message);
       toast.success("Заявку прийнято! Ми зателефонуємо найближчим часом.");
       setDone(true);
-      (e.currentTarget as HTMLFormElement).reset();
+      formEl.reset();
       setDocs([]);
     } catch (err: any) {
+      console.error("[application-form] submit failed", err);
       toast.error("Не вдалось надіслати: " + err.message);
     } finally {
       setLoading(false);
